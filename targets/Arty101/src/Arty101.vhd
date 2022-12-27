@@ -117,7 +117,7 @@ begin
          fwInputs_o => fwBtn
       );
 
-   fwLed <= fwBtn;
+   fwLeds <= fwBtn;
    u_LedOutputs : entity work.GeneralOutputs
       generic map (
          TPD_G          => TPD_G,
@@ -128,7 +128,7 @@ begin
       port map (
          clk_i       => clk,
          rst_i       => rst,
-         fwOutputs_i => fwLed,
+         fwOutputs_i => fwLeds,
          hwOutputs_o => led
       );
 
