@@ -28,29 +28,8 @@ entity Arty101 is
       CLK100MHZ : in sl;
       ck_rst    : in sl;
 
-      -- RGB LEDs
-      led0_b : out sl;
-      led0_g : out sl;
-      led0_r : out sl;
-      led1_b : out sl;
-      led1_g : out sl;
-      led1_r : out sl;
-      led2_b : out sl;
-      led2_g : out sl;
-      led2_r : out sl;
-      led3_b : out sl;
-      led3_g : out sl;
-      led3_r : out sl;
-
-      -- white LEDs
-      led : out slv(3 downto 0);
-
-      -- buttons
-      btn : in slv(3 downto 0);
-
-      -- switches
-      sw : in slv(3 downto 0)
-
+      led : out slv(4 - 1 downto 0); -- led physical outputs
+      btn : in  slv(4 - 1 downto 0)  -- button physical inputs
    );
 end Arty101;
 ---------------------------------------------------------------------------------------------------    
@@ -59,6 +38,8 @@ architecture rtl of Arty101 is
    signal clk  : sl;
    signal rst  : sl;
    signal rstn : sl;
+
+   signal btn2led : slv(4 - 1 downto 0);
 
 ---------------------------------------------------------------------------------------------------
 begin
@@ -74,21 +55,34 @@ begin
          I => ck_rst
       );
 
-   led3_r <= '1';
-   led3_g <= '1';
-   led3_b <= '1';
+   -----------------------------------------------------------------------------
+   -- IO
+   -----------------------------------------------------------------------------
+   u_Ledoutputs : entity work.ArtyLedOutputs
+      generic map (
+         TPD_G         => TPD_G,
+         SYNC_STAGES_G => 2
+      )
+      port map (
+         clk_i    => clk,
+         rst_i    => rst,
+         fwLeds_i => btn2led,
+         hwLeds_o => led
+      );
 
-   led2_r <= '1';
-   led2_g <= '1';
-   led2_b <= '1';
-
-   led1_r <= '1';
-   led1_g <= '1';
-   led1_b <= '1';
-
-   led0_r <= '1';
-   led0_g <= '1';
-   led0_b <= '1';
+   u_BtnInputs : entity work.ArtyButtonInputs
+      generic map (
+         TPD_G                => TPD_G,
+         CLK_FREQ_G           => 100.0E6,
+         INPUTS_SYNC_STAGES_G => 3,
+         DEBOUNCE_PERIOD_G    => 20.0E-3
+      )
+      port map (
+         clk_i    => clk,
+         rst_i    => rst,
+         hwBtns_i => btn,
+         fwBtns_o => btn2led
+      );
 
 end rtl;
 ---------------------------------------------------------------------------------------------------
