@@ -50,17 +50,21 @@ end Arty101;
 ---------------------------------------------------------------------------------------------------    
 architecture rtl of Arty101 is
 
+   -- constants
+   constant CLK_FREQ_C : real := 100.0E6;
+
    signal clk  : sl;
    signal rst  : sl;
    signal rstn : sl;
 
-   signal btn2led : slv(4 - 1 downto 0);
+   -- inputs
+   signal fwBtn    : slv(4 - 1 downto 0);
+   signal fwSwitch : slv(4 - 1 downto 0);
 
-   signal rgbLeds : slv(12 - 1 downto 0);
-
-   signal fwSwitch  : slv(4 - 1 downto 0);
+   -- outputs
+   signal fwLeds    : slv(4 - 1 downto 0);
    signal fwRgbLeds : slv(12 -1 downto 0);
-
+   signal hwRgbLeds : slv(12 - 1 downto 0);
 
 ---------------------------------------------------------------------------------------------------
 begin
@@ -77,79 +81,90 @@ begin
       );
 
    -----------------------------------------------------------------------------
-   -- IO
+   -- General IO
    -----------------------------------------------------------------------------
-   u_Ledoutputs : entity work.ArtyLedOutputs
+   u_SwitchInputs : entity work.GeneralInputs
       generic map (
-         TPD_G         => TPD_G,
-         SYNC_STAGES_G => 2
+         TPD_G             => TPD_G,
+         INPUT_WIDTH_G     => 4,
+         CLK_FREQ_G        => CLK_FREQ_C,
+         SYNC_STAGES_G     => 3,
+         DEBOUNCE_PERIOD_G => 20.0E-3,
+         HW_POLARITY_G     => '1',
+         FW_POLARITY_G     => '1'
       )
       port map (
-         clk_i    => clk,
-         rst_i    => rst,
-         fwLeds_i => btn2led,
-         hwLeds_o => led
+         clk_i      => clk,
+         rst_i      => rst,
+         hwInputs_i => sw,
+         fwInputs_o => fwSwitch
       );
 
-   led0_r <= rgbLeds(0 + (0 * 3));
-   led0_g <= rgbLeds(1 + (0 * 3));
-   led0_b <= rgbLeds(2 + (0 * 3));
+   u_ButtonInputs : entity work.GeneralInputs
+      generic map (
+         TPD_G             => TPD_G,
+         INPUT_WIDTH_G     => 4,
+         CLK_FREQ_G        => CLK_FREQ_C,
+         SYNC_STAGES_G     => 3,
+         DEBOUNCE_PERIOD_G => 20.0E-3,
+         HW_POLARITY_G     => '1',
+         FW_POLARITY_G     => '1'
+      )
+      port map (
+         clk_i      => clk,
+         rst_i      => rst,
+         hwInputs_i => btn,
+         fwInputs_o => fwBtn
+      );
 
-   led1_r <= rgbLeds(0 + (1 * 3));
-   led1_g <= rgbLeds(1 + (1 * 3));
-   led1_b <= rgbLeds(2 + (1 * 3));
-
-   led2_r <= rgbLeds(0 + (2 * 3));
-   led2_g <= rgbLeds(1 + (2 * 3));
-   led2_b <= rgbLeds(2 + (2 * 3));
-
-   led3_r <= rgbLeds(0 + (3 * 3));
-   led3_g <= rgbLeds(1 + (3 * 3));
-   led3_b <= rgbLeds(2 + (3 * 3));
+   fwLed <= fwBtn;
+   u_LedOutputs : entity work.GeneralOutputs
+      generic map (
+         TPD_G          => TPD_G,
+         OUTPUT_WIDTH_G => 4,
+         SYNC_STAGES_G  => 2,
+         HW_POLARITY_G  => '1'
+      )
+      port map (
+         clk_i       => clk,
+         rst_i       => rst,
+         fwOutputs_i => fwLed,
+         hwOutputs_o => led
+      );
 
    fwRgbLeds((0 + 1) * 3 - 1 downto 0 * 3) <= (others => fwSwitch(0));
    fwRgbLeds((1 + 1) * 3 - 1 downto 1 * 3) <= (others => fwSwitch(1));
    fwRgbLeds((2 + 1) * 3 - 1 downto 2 * 3) <= (others => fwSwitch(2));
    fwRgbLeds((3 + 1) * 3 - 1 downto 3 * 3) <= (others => fwSwitch(3));
 
-   u_RgbLedOutputs : entity work.ArtyRgbLedOutputs
+   led0_r <= hwRgbLeds(0 + (0 * 3));
+   led0_g <= hwRgbLeds(1 + (0 * 3));
+   led0_b <= hwRgbLeds(2 + (0 * 3));
+
+   led1_r <= hwRgbLeds(0 + (1 * 3));
+   led1_g <= hwRgbLeds(1 + (1 * 3));
+   led1_b <= hwRgbLeds(2 + (1 * 3));
+
+   led2_r <= hwRgbLeds(0 + (2 * 3));
+   led2_g <= hwRgbLeds(1 + (2 * 3));
+   led2_b <= hwRgbLeds(2 + (2 * 3));
+
+   led3_r <= hwRgbLeds(0 + (3 * 3));
+   led3_g <= hwRgbLeds(1 + (3 * 3));
+   led3_b <= hwRgbLeds(2 + (3 * 3));
+
+   u_RgbLedOutputs : entity work.GeneralOutputs
       generic map (
-         TPD_G         => TPD_G,
-         SYNC_STAGES_G => 2
+         TPD_G          => TPD_G,
+         OUTPUT_WIDTH_G => 12,
+         SYNC_STAGES_G  => 2,
+         HW_POLARITY_G  => '1'
       )
       port map (
          clk_i       => clk,
          rst_i       => rst,
-         fwRgbLeds_i => fwRgbLeds,
-         hwRgbLeds_o => rgbLeds
-      );
-
-   u_BtnInputs : entity work.ArtyButtonInputs
-      generic map (
-         TPD_G                => TPD_G,
-         CLK_FREQ_G           => 100.0E6,
-         INPUTS_SYNC_STAGES_G => 3,
-         DEBOUNCE_PERIOD_G    => 20.0E-3
-      )
-      port map (
-         clk_i    => clk,
-         rst_i    => rst,
-         hwBtns_i => btn,
-         fwBtns_o => btn2led
-      );
-
-   u_SwitchInputs : entity work.ArtySwitchInputs
-      generic map (
-         TPD_G                => TPD_G,
-         CLK_FREQ_G           => 100.0E6,
-         INPUTS_SYNC_STAGES_G => 3,
-         DEBOUNCE_PERIOD_G    => 20.0E-3
-      )
-      port map (
-         clk_i      => clk,
-         rst_i      => rst,
-         hwSwitch_i => sw,
-         fwSwitch_o => fwSwitch
+         fwOutputs_i => fwRgbLeds,
+         hwOutputs_o => hwRgbLeds
       );
 
 end rtl;
