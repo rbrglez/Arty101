@@ -10,4 +10,4 @@ loadSource      -dir  "$::DIR_PATH/src/"
 loadConstraints  -dir  "$::DIR_PATH/src/"
 
 # Load modules
-#loadRuckusTcl "$::env(TOP_DIR)/modules/Io"
+loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtyButtonInputs"
