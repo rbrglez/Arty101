@@ -42,8 +42,7 @@ entity Arty101 is
       led2_r : out sl;
       led3_b : out sl;
       led3_g : out sl;
-      led3_r : out sl;
-
+      led3_r : out sl
    );
 end Arty101;
 ---------------------------------------------------------------------------------------------------    
@@ -52,8 +51,8 @@ architecture rtl of Arty101 is
    -- constants
    constant CLK_FREQ_C : real := 100.0E6;
 
-   signal clk  : sl;
-   signal rst  : sl;
+   signal clk : sl;
+   signal rst : sl;
 
    -- inputs
    signal fwBtn    : slv(4 - 1 downto 0);
