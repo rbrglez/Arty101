@@ -14,3 +14,5 @@ loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtyButtonInputs"
 loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtySwitchInputs"
 loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtyLedOutputs"
 loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtyRgbLedOutputs"
+
+loadRuckusTcl "$::env(TOP_DIR)/modules/GeneralIo"
