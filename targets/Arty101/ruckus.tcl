@@ -11,5 +11,6 @@ loadConstraints  -dir  "$::DIR_PATH/src/"
 
 # Load modules
 loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtyButtonInputs"
+loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtySwitchInputs"
 loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtyLedOutputs"
 loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyIo/ArtyRgbLedOutputs"
