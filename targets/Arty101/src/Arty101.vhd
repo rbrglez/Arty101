@@ -91,21 +91,21 @@ begin
          hwLeds_o => led
       );
 
-   led0_r <= rgbLeds(0 + 0);
-   led0_g <= rgbLeds(0 + 1);
-   led0_b <= rgbLeds(0 + 2);
+   led0_r <= rgbLeds(0 + (0 * 3));
+   led0_g <= rgbLeds(1 + (0 * 3));
+   led0_b <= rgbLeds(2 + (0 * 3));
 
-   led1_r <= rgbLeds(1 + 0);
-   led1_g <= rgbLeds(1 + 1);
-   led1_b <= rgbLeds(1 + 2);
+   led1_r <= rgbLeds(0 + (1 * 3));
+   led1_g <= rgbLeds(1 + (1 * 3));
+   led1_b <= rgbLeds(2 + (1 * 3));
 
-   led2_r <= rgbLeds(2 + 0);
-   led2_g <= rgbLeds(2 + 1);
-   led2_b <= rgbLeds(2 + 2);
+   led2_r <= rgbLeds(0 + (2 * 3));
+   led2_g <= rgbLeds(1 + (2 * 3));
+   led2_b <= rgbLeds(2 + (2 * 3));
 
-   led3_r <= rgbLeds(3 + 0);
-   led3_g <= rgbLeds(3 + 1);
-   led3_b <= rgbLeds(3 + 2);
+   led3_r <= rgbLeds(0 + (3 * 3));
+   led3_g <= rgbLeds(1 + (3 * 3));
+   led3_b <= rgbLeds(2 + (3 * 3));
 
    fwRgbLeds((0 + 1) * 3 - 1 downto 0 * 3) <= (others => fwSwitch(0));
    fwRgbLeds((1 + 1) * 3 - 1 downto 1 * 3) <= (others => fwSwitch(1));
