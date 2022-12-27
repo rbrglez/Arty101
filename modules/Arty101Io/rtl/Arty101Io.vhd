@@ -22,7 +22,7 @@ entity Arty101Io is
    generic (
       TPD_G             : time := 1 ns;
       CLK_FREQ_G        : real := 100.0E6;
-      DEBOUNCE_PERIOD_G : real := 20.0E-3;
+      DEBOUNCE_PERIOD_G : real := 20.0E-3
    );
    port (
       --------------------------------------------------------------------------
@@ -70,7 +70,7 @@ begin
 
    -- Reset
    fwRst_o <= rst;
-   u_RstInput : entity work.Arty101Io
+   u_RstInput : entity work.GeneralInputs
       generic map (
          TPD_G             => TPD_G,
          INPUT_WIDTH_G     => 1,
@@ -88,7 +88,7 @@ begin
       );
 
    -- Buttons
-   u_ButtonInputs : entity work.Arty101Io
+   u_ButtonInputs : entity work.GeneralInputs
       generic map (
          TPD_G             => TPD_G,
          INPUT_WIDTH_G     => 4,
@@ -106,7 +106,7 @@ begin
       );
 
    -- Switches
-   u_SwitchInputs : entity work.Arty101Io
+   u_SwitchInputs : entity work.GeneralInputs
       generic map (
          TPD_G             => TPD_G,
          INPUT_WIDTH_G     => 4,
