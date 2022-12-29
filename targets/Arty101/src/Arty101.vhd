@@ -96,10 +96,20 @@ architecture rtl of Arty101 is
    signal fwRow : slv(4 - 1 downto 0);
    signal hwRow : slv(4 - 1 downto 0);
 
+   signal actKeysUpd : sl;
+   signal actKeys    : slv(16 - 1 downto 0);
+
+   signal decRow0 : slv(4 - 1 downto 0);
+   signal decRow1 : slv(4 - 1 downto 0);
+   signal decRow2 : slv(4 - 1 downto 0);
+   signal decRow3 : slv(4 - 1 downto 0);
+
    -----------------------------------------------------------------------------
    -- Debug declarations
    -----------------------------------------------------------------------------
    attribute mark_debug : string;
+
+   attribute mark_debug of clk : signal is KEYPAD_DEBUG_C;
 
    attribute mark_debug of fwCol : signal is KEYPAD_DEBUG_C;
    attribute mark_debug of hwCol : signal is KEYPAD_DEBUG_C;
@@ -107,22 +117,59 @@ architecture rtl of Arty101 is
    attribute mark_debug of fwRow : signal is KEYPAD_DEBUG_C;
    attribute mark_debug of hwRow : signal is KEYPAD_DEBUG_C;
 
+
+   attribute mark_debug of actKeysUpd : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of actKeys    : signal is KEYPAD_DEBUG_C;
+
+   attribute mark_debug of decRow0 : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of decRow1 : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of decRow2 : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of decRow3 : signal is KEYPAD_DEBUG_C;
+
+
 ---------------------------------------------------------------------------------------------------
 begin
 
    -----------------------------------------------------------------------------
    -- "Core"
    -----------------------------------------------------------------------------
-   -- Control LEDs
-   fwLeds <= fwBtn;
-
    -- Control RGB LEDs
    fwRgbLeds((0 + 1) * 3 - 1 downto 0 * 3) <= (others => fwSwitch(0));
    fwRgbLeds((1 + 1) * 3 - 1 downto 1 * 3) <= (others => fwSwitch(1));
    fwRgbLeds((2 + 1) * 3 - 1 downto 2 * 3) <= (others => fwSwitch(2));
    fwRgbLeds((3 + 1) * 3 - 1 downto 3 * 3) <= (others => fwSwitch(3));
 
-   fwRow <= fwSwitch;
+   fwLeds <=
+      decRow0 when fwSwitch = "0001" else
+      decRow1 when fwSwitch = "0010" else
+      decRow2 when fwSwitch = "0100" else
+      decRow3 when fwSwitch = "1000" else
+      "0000";
+
+   decRow0 <= actKeys((0 + 1) * 4 - 1 downto 0 * 4);
+   decRow1 <= actKeys((1 + 1) * 4 - 1 downto 1 * 4);
+   decRow2 <= actKeys((2 + 1) * 4 - 1 downto 2 * 4);
+   decRow3 <= actKeys((3 + 1) * 4 - 1 downto 3 * 4);
+
+   u_KeypadDecoder : entity work.KeypadDecoder
+      generic map (
+         TPD_G => TPD_G,
+
+         ROW_WIDTH_G => 4,
+         COL_WIDTH_G => 4,
+
+         COL_SAMPLE_DELAY_G => 500_000 -- This value must be larger than debounce period of col_i!
+      )
+      port map (
+         clk_i => clk,
+         rst_i => rst,
+         en_i  => '1',
+
+         row_o        => fwRow,
+         col_i        => fwCol,
+         actKeysUpd_o => actKeysUpd,
+         actKeys_o    => actKeys
+      );
 
    -----------------------------------------------------------------------------
    -- IOs
@@ -169,16 +216,14 @@ begin
    led3_g <= hwRgbLeds(1 + (3 * 3));
    led3_b <= hwRgbLeds(2 + (3 * 3));
 
-   -----------------------------------------------------------------------------
-   --
-   -----------------------------------------------------------------------------
+   -- Column inputs
    u_ColInputs : entity work.GeneralInputs
       generic map (
          TPD_G             => TPD_G,
          INPUT_WIDTH_G     => 4,
          CLK_FREQ_G        => CLK_FREQ_C,
          SYNC_STAGES_G     => 3,
-         DEBOUNCE_PERIOD_G => 20.0E-3,
+         DEBOUNCE_PERIOD_G => 1.0E-3,
          HW_POLARITY_G     => '1',
          FW_POLARITY_G     => '1'
       )
@@ -194,6 +239,7 @@ begin
    hwCol(COL2_C) <= ck_io1; -- Header 2
    hwCol(COL3_C) <= ck_io0; -- Header 1
 
+   -- Row outputs
    u_RowOutputs : entity work.GeneralOutputs
       generic map (
          TPD_G          => TPD_G,

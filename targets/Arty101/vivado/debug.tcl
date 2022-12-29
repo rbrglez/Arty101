@@ -68,6 +68,16 @@ if {$ILA(enable) == 1} {
    ConfigProbe ${ILA(unit)} {fwRow[*]}
    ConfigProbe ${ILA(unit)} {hwRow[*]}
 
+   # KeypadDecoder
+   ConfigProbe ${ILA(unit)} {actKeysUpd}
+   ConfigProbe ${ILA(unit)} {actKeys[*]}
+
+   ConfigProbe ${ILA(unit)} {decRow0[*]}
+   ConfigProbe ${ILA(unit)} {decRow1[*]}
+   ConfigProbe ${ILA(unit)} {decRow2[*]}
+   ConfigProbe ${ILA(unit)} {decRow3[*]}
+
+
    WriteDebugProbes ${ILA(unit)} ${PROJ_DIR}/images/debug_probes.ltx
 }
 ################################################################################
