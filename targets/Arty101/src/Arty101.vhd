@@ -56,7 +56,21 @@ entity Arty101 is
       ck_io8  : out sl; -- Header 8
       ck_io9  : out sl; -- Header 7
       ck_io10 : out sl; -- Header 6
-      ck_io11 : out sl  -- Header 5
+      ck_io11 : out sl; -- Header 5
+
+      --------------------------------------------------------------------------
+      -- ChipKit Inner Digital Header
+      --------------------------------------------------------------------------
+      -- Outputs 
+      ck_io30 : out sl;
+      ck_io31 : out sl;
+      ck_io32 : out sl;
+      ck_io33 : out sl;
+      --
+      ck_io38 : out sl;
+      ck_io39 : out sl;
+      ck_io40 : out sl;
+      ck_io41 : out sl
    );
 end Arty101;
 ---------------------------------------------------------------------------------------------------    
@@ -103,6 +117,10 @@ architecture rtl of Arty101 is
    signal decRow1 : slv(4 - 1 downto 0);
    signal decRow2 : slv(4 - 1 downto 0);
    signal decRow3 : slv(4 - 1 downto 0);
+
+   --
+   signal fwSegmentDisplay : slv(8 - 1 downto 0);
+   signal hwSegmentDisplay : slv(8 - 1 downto 0);
 
    -----------------------------------------------------------------------------
    -- Debug declarations
@@ -171,6 +189,11 @@ begin
          actKeys_o    => actKeys
       );
 
+   fwSegmentDisplay <=
+      ("0000" & fwBtn) when fwSwitch = "0011" else
+      (fwBtn & "0000") when fwSwitch = "1100" else
+      "00000000";
+
    -----------------------------------------------------------------------------
    -- IOs
    -----------------------------------------------------------------------------
@@ -216,6 +239,9 @@ begin
    led3_g <= hwRgbLeds(1 + (3 * 3));
    led3_b <= hwRgbLeds(2 + (3 * 3));
 
+   -----------------------------------------------------------------------------
+   -- Keypad IOs
+   -----------------------------------------------------------------------------
    -- Column inputs
    u_ColInputs : entity work.GeneralInputs
       generic map (
@@ -258,6 +284,32 @@ begin
    ck_io10 <= hwRow(ROW1_C); -- Header 6
    ck_io9  <= hwRow(ROW2_C); -- Header 7
    ck_io8  <= hwRow(ROW3_C); -- Header 8
+
+   -----------------------------------------------------------------------------
+   -- 7 Segment display IOs
+   -----------------------------------------------------------------------------
+   u_SegmentDisplayOutputs : entity work.GeneralOutputs
+      generic map (
+         TPD_G          => TPD_G,
+         OUTPUT_WIDTH_G => 8,
+         SYNC_STAGES_G  => 2,
+         HW_POLARITY_G  => '1'
+      )
+      port map (
+         clk_i       => clk,
+         rst_i       => rst,
+         fwOutputs_i => fwSegmentDisplay,
+         hwOutputs_o => hwSegmentDisplay
+      );
+
+   ck_io30 <= hwSegmentDisplay(0);
+   ck_io31 <= hwSegmentDisplay(1);
+   ck_io32 <= hwSegmentDisplay(2);
+   ck_io33 <= hwSegmentDisplay(3);
+   ck_io38 <= hwSegmentDisplay(4);
+   ck_io39 <= hwSegmentDisplay(5);
+   ck_io40 <= hwSegmentDisplay(6);
+   ck_io41 <= hwSegmentDisplay(7);
 
 end rtl;
 ---------------------------------------------------------------------------------------------------
