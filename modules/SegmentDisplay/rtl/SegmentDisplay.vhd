@@ -62,17 +62,17 @@ begin
 
       if (en_i = '1') then
          case data_i is
-            when x"0"   => v.segments := x"11";
-            when x"1"   => v.segments := x"12";
-            when x"2"   => v.segments := x"24";
-            when x"3"   => v.segments := x"28";
-            when x"4"   => v.segments := x"41";
-            when x"5"   => v.segments := x"42";
-            when x"6"   => v.segments := x"84";
-            when x"7"   => v.segments := x"88";
-            when x"8"   => v.segments := x"07";
-            when x"9"   => v.segments := x"70";
-            when others => v.segments := x"00";
+            when x"0"   => v.segments := x"E7";
+            when x"1"   => v.segments := x"21";
+            when x"2"   => v.segments := x"CB";
+            when x"3"   => v.segments := x"6B";
+            when x"4"   => v.segments := x"2D";
+            when x"5"   => v.segments := x"6E";
+            when x"6"   => v.segments := x"EE";
+            when x"7"   => v.segments := x"23";
+            when x"8"   => v.segments := x"EF";
+            when x"9"   => v.segments := x"6F";
+            when others => v.segments := x"10";
          end case;
 
       else
