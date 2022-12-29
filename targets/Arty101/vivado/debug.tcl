@@ -48,10 +48,10 @@ if {$ILA(enable) == 1} {
 ################################################################################
 
 ################################################################################
-# Random_ILA_Template
-set ILA(enable) 0
+# Keypad chipscope
+set ILA(enable) 1
 set ILA(size)   1024
-set ILA(name)   "test"
+set ILA(name)   "keypad"
 set ILA(clock)  "clk"
 
 if {$ILA(enable) == 1} {
@@ -60,22 +60,13 @@ if {$ILA(enable) == 1} {
    set_property C_DATA_DEPTH $ILA(size) [get_debug_cores ${ILA(unit)}]
    SetDebugCoreClk ${ILA(unit)} ${ILA(clock)}
 
-   # reset
-   ConfigProbe ${ILA(unit)} {rst}
+   # Outputs
+   ConfigProbe ${ILA(unit)} {fwHeader14[*]}
+   ConfigProbe ${ILA(unit)} {hwHeader14[*]}
 
-   # button
-   ConfigProbe ${ILA(unit)} {Io_btn[*]}
-
-   # switch
-   ConfigProbe ${ILA(unit)} {Io_sw[*]}
-
-   # white leds
-   ConfigProbe ${ILA(unit)} {Manager_leds[*]}
-   ConfigProbe ${ILA(unit)} {Io_leds[*]}
-
-   # RGB leds
-   ConfigProbe ${ILA(unit)} {Manager_rgbLeds[*]}
-   ConfigProbe ${ILA(unit)} {Io_rgbLeds[*]}
+   # Inputs
+   ConfigProbe ${ILA(unit)} {fwHeader58[*]}
+   ConfigProbe ${ILA(unit)} {hwHeader58[*]}
 
    WriteDebugProbes ${ILA(unit)} ${PROJ_DIR}/images/debug_probes.ltx
 }

@@ -42,7 +42,21 @@ entity Arty101 is
       led2_r : out sl;
       led3_b : out sl;
       led3_g : out sl;
-      led3_r : out sl
+      led3_r : out sl;
+      --------------------------------------------------------------------------
+      -- ChipKit Outer Digital Header
+      --------------------------------------------------------------------------
+      -- Inputs (H5 - H8)
+      ck_io0 : in sl; -- H8
+      ck_io1 : in sl; -- H7
+      ck_io2 : in sl; -- H6
+      ck_io3 : in sl; -- H5
+
+      -- Outputs (H1 - H4)
+      ck_io8  : out sl; -- H4
+      ck_io9  : out sl; -- H3
+      ck_io10 : out sl; -- H2
+      ck_io11 : out sl  -- H1
    );
 end Arty101;
 ---------------------------------------------------------------------------------------------------    
@@ -50,6 +64,17 @@ architecture rtl of Arty101 is
 
    -- constants
    constant CLK_FREQ_C : real := 100.0E6;
+
+
+   constant H1_C : natural := 0;
+   constant H2_C : natural := 1;
+   constant H3_C : natural := 2;
+   constant H4_C : natural := 3;
+
+   constant H5_C : natural := 0;
+   constant H6_C : natural := 1;
+   constant H7_C : natural := 2;
+   constant H8_C : natural := 3;
 
    signal clk : sl;
    signal rst : sl;
@@ -62,6 +87,25 @@ architecture rtl of Arty101 is
    signal fwLeds    : slv(4 - 1 downto 0);
    signal fwRgbLeds : slv(12 -1 downto 0);
    signal hwRgbLeds : slv(12 - 1 downto 0);
+
+   -- Header 1 to 4
+   signal fwHeader14 : slv(4 - 1 downto 0);
+   signal hwHeader14 : slv(4 - 1 downto 0);
+
+   -- Header 5 to 8
+   signal fwHeader58 : slv(4 - 1 downto 0);
+   signal hwHeader58 : slv(4 - 1 downto 0);
+
+   -----------------------------------------------------------------------------
+   -- Debug declarations
+   -----------------------------------------------------------------------------
+   attribute mark_debug : string;
+   
+   attribute mark_debug of fwHeader14 : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of hwHeader14 : signal is KEYPAD_DEBUG_C;
+
+   attribute mark_debug of fwHeader58 : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of hwHeader58 : signal is KEYPAD_DEBUG_C;
 
 ---------------------------------------------------------------------------------------------------
 begin
@@ -77,6 +121,8 @@ begin
    fwRgbLeds((1 + 1) * 3 - 1 downto 1 * 3) <= (others => fwSwitch(1));
    fwRgbLeds((2 + 1) * 3 - 1 downto 2 * 3) <= (others => fwSwitch(2));
    fwRgbLeds((3 + 1) * 3 - 1 downto 3 * 3) <= (others => fwSwitch(3));
+
+   fwHeader14 <= fwSwitch;
 
    -----------------------------------------------------------------------------
    -- IOs
@@ -122,6 +168,50 @@ begin
    led3_r <= hwRgbLeds(0 + (3 * 3));
    led3_g <= hwRgbLeds(1 + (3 * 3));
    led3_b <= hwRgbLeds(2 + (3 * 3));
+
+   -----------------------------------------------------------------------------
+   --
+   -----------------------------------------------------------------------------
+   u_Header58Inputs : entity work.GeneralInputs
+      generic map (
+         TPD_G             => TPD_G,
+         INPUT_WIDTH_G     => 4,
+         CLK_FREQ_G        => CLK_FREQ_C,
+         SYNC_STAGES_G     => 3,
+         DEBOUNCE_PERIOD_G => 20.0E-3,
+         HW_POLARITY_G     => '1',
+         FW_POLARITY_G     => '1'
+      )
+      port map (
+         clk_i      => clk,
+         rst_i      => rst,
+         hwInputs_i => hwHeader58,
+         fwInputs_o => fwHeader58
+      );
+
+   hwHeader58(H5_C) <= ck_io3;
+   hwHeader58(H6_C) <= ck_io2;
+   hwHeader58(H7_C) <= ck_io1;
+   hwHeader58(H8_C) <= ck_io0;
+
+   u_Header14Outputs : entity work.GeneralOutputs
+      generic map (
+         TPD_G          => TPD_G,
+         OUTPUT_WIDTH_G => 4,
+         SYNC_STAGES_G  => 2,
+         HW_POLARITY_G  => '1'
+      )
+      port map (
+         clk_i       => clk,
+         rst_i       => rst,
+         fwOutputs_i => fwHeader14,
+         hwOutputs_o => hwHeader14
+      );
+
+   ck_io11 <= hwHeader14(H1_C);
+   ck_io10 <= hwHeader14(H2_C);
+   ck_io9  <= hwHeader14(H3_C);
+   ck_io8  <= hwHeader14(H4_C);
 
 end rtl;
 ---------------------------------------------------------------------------------------------------
