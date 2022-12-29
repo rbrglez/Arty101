@@ -66,15 +66,15 @@ architecture rtl of Arty101 is
    constant CLK_FREQ_C : real := 100.0E6;
 
 
-   constant H1_C : natural := 0;
-   constant H2_C : natural := 1;
-   constant H3_C : natural := 2;
-   constant H4_C : natural := 3;
+   constant COL0_C : natural := 0;
+   constant COL1_C : natural := 1;
+   constant COL2_C : natural := 2;
+   constant COL3_C : natural := 3;
 
-   constant H5_C : natural := 0;
-   constant H6_C : natural := 1;
-   constant H7_C : natural := 2;
-   constant H8_C : natural := 3;
+   constant ROW0_C : natural := 0;
+   constant ROW1_C : natural := 1;
+   constant ROW2_C : natural := 2;
+   constant ROW3_C : natural := 3;
 
    signal clk : sl;
    signal rst : sl;
@@ -89,23 +89,23 @@ architecture rtl of Arty101 is
    signal hwRgbLeds : slv(12 - 1 downto 0);
 
    -- Header 1 to 4
-   signal fwHeader14 : slv(4 - 1 downto 0);
-   signal hwHeader14 : slv(4 - 1 downto 0);
+   signal fwCol : slv(4 - 1 downto 0);
+   signal hwCol : slv(4 - 1 downto 0);
 
    -- Header 5 to 8
-   signal fwHeader58 : slv(4 - 1 downto 0);
-   signal hwHeader58 : slv(4 - 1 downto 0);
+   signal fwRow : slv(4 - 1 downto 0);
+   signal hwRow : slv(4 - 1 downto 0);
 
    -----------------------------------------------------------------------------
    -- Debug declarations
    -----------------------------------------------------------------------------
    attribute mark_debug : string;
-   
-   attribute mark_debug of fwHeader14 : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of hwHeader14 : signal is KEYPAD_DEBUG_C;
 
-   attribute mark_debug of fwHeader58 : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of hwHeader58 : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of fwCol : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of hwCol : signal is KEYPAD_DEBUG_C;
+
+   attribute mark_debug of fwRow : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of hwRow : signal is KEYPAD_DEBUG_C;
 
 ---------------------------------------------------------------------------------------------------
 begin
@@ -116,13 +116,13 @@ begin
    -- Control LEDs
    fwLeds <= fwBtn;
 
-   -- Control Rcb LEDs
+   -- Control RGB LEDs
    fwRgbLeds((0 + 1) * 3 - 1 downto 0 * 3) <= (others => fwSwitch(0));
    fwRgbLeds((1 + 1) * 3 - 1 downto 1 * 3) <= (others => fwSwitch(1));
    fwRgbLeds((2 + 1) * 3 - 1 downto 2 * 3) <= (others => fwSwitch(2));
    fwRgbLeds((3 + 1) * 3 - 1 downto 3 * 3) <= (others => fwSwitch(3));
 
-   fwHeader14 <= fwSwitch;
+   fwCol <= fwSwitch;
 
    -----------------------------------------------------------------------------
    -- IOs
@@ -172,7 +172,7 @@ begin
    -----------------------------------------------------------------------------
    --
    -----------------------------------------------------------------------------
-   u_Header58Inputs : entity work.GeneralInputs
+   u_RowInputs : entity work.GeneralInputs
       generic map (
          TPD_G             => TPD_G,
          INPUT_WIDTH_G     => 4,
@@ -185,16 +185,16 @@ begin
       port map (
          clk_i      => clk,
          rst_i      => rst,
-         hwInputs_i => hwHeader58,
-         fwInputs_o => fwHeader58
+         hwInputs_i => hwRow,
+         fwInputs_o => fwRow
       );
 
-   hwHeader58(H5_C) <= ck_io3;
-   hwHeader58(H6_C) <= ck_io2;
-   hwHeader58(H7_C) <= ck_io1;
-   hwHeader58(H8_C) <= ck_io0;
+   hwRow(ROW0_C) <= ck_io3; -- Header 5
+   hwRow(ROW1_C) <= ck_io2; -- Header 6
+   hwRow(ROW2_C) <= ck_io1; -- Header 7
+   hwRow(ROW3_C) <= ck_io0; -- Header 8
 
-   u_Header14Outputs : entity work.GeneralOutputs
+   u_ColumnOutputs : entity work.GeneralOutputs
       generic map (
          TPD_G          => TPD_G,
          OUTPUT_WIDTH_G => 4,
@@ -204,14 +204,14 @@ begin
       port map (
          clk_i       => clk,
          rst_i       => rst,
-         fwOutputs_i => fwHeader14,
-         hwOutputs_o => hwHeader14
+         fwOutputs_i => fwCol,
+         hwOutputs_o => hwCol
       );
 
-   ck_io11 <= hwHeader14(H1_C);
-   ck_io10 <= hwHeader14(H2_C);
-   ck_io9  <= hwHeader14(H3_C);
-   ck_io8  <= hwHeader14(H4_C);
+   ck_io11 <= hwCol(COL0_C); -- Header 1
+   ck_io10 <= hwCol(COL1_C); -- Header 2
+   ck_io9  <= hwCol(COL2_C); -- Header 3
+   ck_io8  <= hwCol(COL3_C); -- Header 4
 
 end rtl;
 ---------------------------------------------------------------------------------------------------
