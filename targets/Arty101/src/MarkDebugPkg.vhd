@@ -21,8 +21,7 @@ use surf.StdRtlPkg.all;
 package MarkDebugPkg is
 
    -- Marked for debug
-   constant TOP_C           : string := "false";
-   constant MANAGER_DEBUG_C : string := "false";
+   constant KEYPAD_DEBUG_C : string := "true";
 
 end MarkDebugPkg;
 
