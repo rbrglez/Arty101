@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------------------------
--- @brief Arty101Io
+-- @brief ArtyPeripheralIo
 --
 -- @author Rene Brglez (rene.brglez@gmail.com)
 --
@@ -7,7 +7,7 @@
 -- 
 -- @version v0.1
 --
--- @file Arty101Io.vhd
+-- @file ArtyPeripheralIo.vhd
 --
 ----------------------------------------------------------------------------------------------------
 library ieee;
@@ -18,7 +18,7 @@ library surf;
 use surf.StdRtlPkg.all;
 
 ----------------------------------------------------------------------------------------------------
-entity Arty101Io is
+entity ArtyPeripheralIo is
    generic (
       TPD_G             : time := 1 ns;
       CLK_FREQ_G        : real := 100.0E6;
@@ -51,9 +51,9 @@ entity Arty101Io is
       fwRgbLeds_i : in  slv(12 - 1 downto 0);
       hwRgbLeds_o : out slv(12 - 1 downto 0)
    );
-end Arty101Io;
+end ArtyPeripheralIo;
 ----------------------------------------------------------------------------------------------------   
-architecture rtl of Arty101Io is
+architecture rtl of ArtyPeripheralIo is
 
    signal clk : sl;
    signal rst : sl;
