@@ -46,17 +46,17 @@ entity Arty101 is
       --------------------------------------------------------------------------
       -- ChipKit Outer Digital Header
       --------------------------------------------------------------------------
-      -- Inputs (H5 - H8)
-      ck_io0 : in sl; -- H8
-      ck_io1 : in sl; -- H7
-      ck_io2 : in sl; -- H6
-      ck_io3 : in sl; -- H5
+      -- Inputs 
+      ck_io0 : in sl; -- Header 1
+      ck_io1 : in sl; -- Header 2
+      ck_io2 : in sl; -- Header 3
+      ck_io3 : in sl; -- Header 4
 
-      -- Outputs (H1 - H4)
-      ck_io8  : out sl; -- H4
-      ck_io9  : out sl; -- H3
-      ck_io10 : out sl; -- H2
-      ck_io11 : out sl  -- H1
+      -- Outputs 
+      ck_io8  : out sl; -- Header 8
+      ck_io9  : out sl; -- Header 7
+      ck_io10 : out sl; -- Header 6
+      ck_io11 : out sl  -- Header 5
    );
 end Arty101;
 ---------------------------------------------------------------------------------------------------    
@@ -122,7 +122,7 @@ begin
    fwRgbLeds((2 + 1) * 3 - 1 downto 2 * 3) <= (others => fwSwitch(2));
    fwRgbLeds((3 + 1) * 3 - 1 downto 3 * 3) <= (others => fwSwitch(3));
 
-   fwCol <= fwSwitch;
+   fwRow <= fwSwitch;
 
    -----------------------------------------------------------------------------
    -- IOs
@@ -172,7 +172,7 @@ begin
    -----------------------------------------------------------------------------
    --
    -----------------------------------------------------------------------------
-   u_RowInputs : entity work.GeneralInputs
+   u_ColInputs : entity work.GeneralInputs
       generic map (
          TPD_G             => TPD_G,
          INPUT_WIDTH_G     => 4,
@@ -185,16 +185,16 @@ begin
       port map (
          clk_i      => clk,
          rst_i      => rst,
-         hwInputs_i => hwRow,
-         fwInputs_o => fwRow
+         hwInputs_i => hwCol,
+         fwInputs_o => fwCol
       );
 
-   hwRow(ROW0_C) <= ck_io3; -- Header 5
-   hwRow(ROW1_C) <= ck_io2; -- Header 6
-   hwRow(ROW2_C) <= ck_io1; -- Header 7
-   hwRow(ROW3_C) <= ck_io0; -- Header 8
+   hwCol(COL0_C) <= ck_io3; -- Header 4
+   hwCol(COL1_C) <= ck_io2; -- Header 3
+   hwCol(COL2_C) <= ck_io1; -- Header 2
+   hwCol(COL3_C) <= ck_io0; -- Header 1
 
-   u_ColumnOutputs : entity work.GeneralOutputs
+   u_RowOutputs : entity work.GeneralOutputs
       generic map (
          TPD_G          => TPD_G,
          OUTPUT_WIDTH_G => 4,
@@ -204,14 +204,14 @@ begin
       port map (
          clk_i       => clk,
          rst_i       => rst,
-         fwOutputs_i => fwCol,
-         hwOutputs_o => hwCol
+         fwOutputs_i => fwRow,
+         hwOutputs_o => hwRow
       );
 
-   ck_io11 <= hwCol(COL0_C); -- Header 1
-   ck_io10 <= hwCol(COL1_C); -- Header 2
-   ck_io9  <= hwCol(COL2_C); -- Header 3
-   ck_io8  <= hwCol(COL3_C); -- Header 4
+   ck_io11 <= hwRow(ROW0_C); -- Header 5
+   ck_io10 <= hwRow(ROW1_C); -- Header 6
+   ck_io9  <= hwRow(ROW2_C); -- Header 7
+   ck_io8  <= hwRow(ROW3_C); -- Header 8
 
 end rtl;
 ---------------------------------------------------------------------------------------------------
