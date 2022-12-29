@@ -61,12 +61,12 @@ if {$ILA(enable) == 1} {
    SetDebugCoreClk ${ILA(unit)} ${ILA(clock)}
 
    # Outputs
-   ConfigProbe ${ILA(unit)} {fwHeader14[*]}
-   ConfigProbe ${ILA(unit)} {hwHeader14[*]}
+   ConfigProbe ${ILA(unit)} {fwCol[*]}
+   ConfigProbe ${ILA(unit)} {hwCol[*]}
 
    # Inputs
-   ConfigProbe ${ILA(unit)} {fwHeader58[*]}
-   ConfigProbe ${ILA(unit)} {hwHeader58[*]}
+   ConfigProbe ${ILA(unit)} {fwRow[*]}
+   ConfigProbe ${ILA(unit)} {hwRow[*]}
 
    WriteDebugProbes ${ILA(unit)} ${PROJ_DIR}/images/debug_probes.ltx
 }
