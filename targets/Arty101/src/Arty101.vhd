@@ -189,10 +189,19 @@ begin
          actKeys_o    => actKeys
       );
 
-   fwSegmentDisplay <=
-      ("0000" & fwBtn) when fwSwitch = "0011" else
-      (fwBtn & "0000") when fwSwitch = "1100" else
-      "00000000";
+   u_SegmentDisplay : entity work.SegmentDisplay
+      generic map (
+         TPD_G => TPD_G
+      )
+      port map (
+         clk_i      => clk,
+         rst_i      => rst,
+
+         en_i       => '1',
+
+         data_i     => fwSwitch,
+         segments_o => fwSegmentDisplay
+      );      
 
    -----------------------------------------------------------------------------
    -- IOs
