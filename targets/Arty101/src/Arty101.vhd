@@ -206,7 +206,7 @@ begin
    -----------------------------------------------------------------------------
    -- IOs
    -----------------------------------------------------------------------------
-   u_Arty101Io : entity work.Arty101Io
+   u_ArtyPeripheralIo : entity work.ArtyPeripheralIo
       generic map (
          TPD_G             => TPD_G,
          CLK_FREQ_G        => CLK_FREQ_C,

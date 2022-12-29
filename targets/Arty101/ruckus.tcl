@@ -11,6 +11,6 @@ loadConstraints  -dir  "$::DIR_PATH/src/"
 
 # Load modules
 loadRuckusTcl "$::env(TOP_DIR)/modules/GeneralIo"
-loadRuckusTcl "$::env(TOP_DIR)/modules/Arty101Io"
+loadRuckusTcl "$::env(TOP_DIR)/modules/ArtyPeripheralIo"
 loadRuckusTcl "$::env(TOP_DIR)/modules/KeypadDecoder"
 loadRuckusTcl "$::env(TOP_DIR)/modules/SegmentDisplay"
