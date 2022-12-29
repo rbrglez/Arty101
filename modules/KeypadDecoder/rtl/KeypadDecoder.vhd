@@ -1,5 +1,7 @@
 ---------------------------------------------------------------------------------------------------
---! @brief 
+--! @brief Keypad Decoder
+--! @details The unit controls rows of keypad and reads columns of keypad. 
+--! If one button on keypad is pressed, then only one bit will be active on port actKeys_o
 --!
 --! @author Rene Brglez (rene.brglez@cosylab.com)
 --!
@@ -23,9 +25,7 @@ entity KeypadDecoder is
       ROW_WIDTH_G : positive := 4;
       COL_WIDTH_G : positive := 4;
 
-      COL_SAMPLES_PER_ROW_G   : positive := 4;  -- number of column samples while one row is active
-      COL_SAMPLES_THRESHOLD_G : positive := 2;  -- number of valid column samples for column to be considered active
-      COL_SAMPLE_DELAY_G      : natural  := 100 -- delay before sampling
+      COL_SAMPLE_DELAY_G : natural := 100 -- delay before sampling
    );
    port (
       clk_i : in sl;
@@ -48,8 +48,7 @@ architecture rtl of KeypadDecoder is
          IDLE_S,
          RD_COL_S,
          WR_ROW_S,
-         DECODE_S,
-         DONE_S
+         DECODE_S
       );
 
    --! Record containing all FSM outputs and states
@@ -57,16 +56,11 @@ architecture rtl of KeypadDecoder is
       row    : slv(row_o'range);
       cntRow : natural;
       --
-      err : sl;
-      --
       cntSampleDelay : natural;
       --
-      cntSampleNum : natural;
-      colSample    : NaturalArray(COL_WIDTH_G - 1 downto 0);
-      sample       : sl;
-      --
-      actKeysUpd : sl;
-      actKeys    : slv(ROW_WIDTH_G * COL_WIDTH_G - 1 downto 0);
+      actKeysUpd     : sl;
+      actKeys        : slv(ROW_WIDTH_G * COL_WIDTH_G - 1 downto 0);
+      actKeysLatched : slv(ROW_WIDTH_G * COL_WIDTH_G - 1 downto 0);
       --
       state : StateType;
    end record RegType;
@@ -76,16 +70,11 @@ architecture rtl of KeypadDecoder is
          row    => (others => '0'),
          cntRow => 0,
          --
-         err => '0',
-         --
          cntSampleDelay => 0,
          --
-         cntSampleNum => 0,
-         colSample    => (others => 0),
-         sample       => '0',
-         --
-         actKeysUpd => '0',
-         actKeys    => (others => '0'),
+         actKeysUpd     => '0',
+         actKeys        => (others => '0'),
+         actKeysLatched => (others => '0'),
          --
          state => IDLE_S
       );
@@ -99,18 +88,13 @@ architecture rtl of KeypadDecoder is
 ---------------------------------------------------------------------------------------------------
 begin
 
-   -----------------------------------------------------------------------------
-   --
-   -----------------------------------------------------------------------------
    p_Comb : process (all) is
       variable v : RegType;
    begin
       -- Latch the current value
       v := r;
 
-      v.err := '0';
-
-      v.sample     := '0';
+      -- Strobe
       v.actKeysUpd := '0';
 
       -- State Machine
@@ -120,10 +104,8 @@ begin
             --
             v.row            := (others => '0');
             v.cntSampleDelay := 0;
-            v.cntSampleNum   := 0;
 
             if (en_i = '1') then
-               v.err   := '0';
                v.state := WR_ROW_S;
             end if;
          ----------------------------------------------------------------------
@@ -137,20 +119,12 @@ begin
          when RD_COL_S =>
 
             if (r.cntSampleDelay = COL_SAMPLE_DELAY_G) then
-               v.sample := '1';
 
-               for I in COL_WIDTH_G - 1 downto 0 loop
-                  v.colSample(I) := r.colSample(I) + ite(col_i(I) = '1', 1, 0);
-               end loop;
+               v.actKeys((r.cntRow + 1) * ROW_WIDTH_G - 1 downto r.cntRow * ROW_WIDTH_G) := col_i;
                --
                v.cntSampleDelay := 0;
 
-               if (r.cntSampleNum = COL_SAMPLES_PER_ROW_G - 1) then
-                  v.cntSampleNum := 0;
-                  v.state        := DECODE_S;
-               else
-                  v.cntSampleNum := r.cntSampleNum + 1;
-               end if;
+               v.state := DECODE_S;
 
             else
                v.cntSampleDelay := r.cntSampleDelay + 1;
@@ -159,28 +133,16 @@ begin
          ----------------------------------------------------------------------
          when DECODE_S =>
 
-            for I in r.colSample'range loop
-               if (r.colSample(I) > COL_SAMPLES_THRESHOLD_G - 1) then
-                  v.actKeys((ROW_WIDTH_G * r.cntRow) + I) := '1';
-               end if;
-            end loop;
-
-
             if (r.cntRow = ROW_WIDTH_G - 1) then
-               v.cntRow     := 0;
-               v.actKeysUpd := '1';
-               v.state      := DONE_S;
+               v.cntRow         := 0;
+               v.actKeysUpd     := '1';
+               v.actKeys        := (others => '0');
+               v.actKeysLatched := r.actKeys;
             else
                v.cntRow := r.cntRow + 1;
-               v.state  := WR_ROW_S;
             end if;
 
-            v.colSample := (others => 0);
-
-         ----------------------------------------------------------------------
-         when DONE_S =>
-            v.actKeys := (others => '0');
-            v.state   := WR_ROW_S;
+            v.state := WR_ROW_S;
 
          ----------------------------------------------------------------------
          when others =>
@@ -204,9 +166,7 @@ begin
       row_o <= r.row;
 
       actKeysUpd_o <= r.actKeysUpd;
-      if (r.actKeysUpd = '1' or rst_i = '1') then
-         actKeys_o <= r.actKeys;
-      end if;
+      actKeys_o    <= r.actKeysLatched;
 
    end process p_Comb;
 
