@@ -1,4 +1,4 @@
 build/*
 
-targets/*/images
-targets/*/*.info
+targets/*/*/images
+targets/*/*/*.info
