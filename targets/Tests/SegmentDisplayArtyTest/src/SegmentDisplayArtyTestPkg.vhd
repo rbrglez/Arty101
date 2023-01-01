@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------------------------
--- @brief ArtySegmentDisplayTestPkg
+-- @brief SegmentDisplayArtyTestPkg
 --
 -- @author Rene Brglez (rene.brglez@gmail.com)
 --
@@ -7,7 +7,7 @@
 -- 
 -- @version v0.1
 --
--- @file ArtySegmentDisplayTestPkg.vhd
+-- @file SegmentDisplayArtyTestPkg.vhd
 --
 ----------------------------------------------------------------------------------------------------
 
@@ -18,12 +18,12 @@ use ieee.math_real.all;
 library surf;
 use surf.StdRtlPkg.all;
 
-package ArtySegmentDisplayTestPkg is
+package SegmentDisplayArtyTestPkg is
 
    constant CLK_FREQ_C : real := 100.0E6;
 
-end ArtySegmentDisplayTestPkg;
+end SegmentDisplayArtyTestPkg;
 
-package body ArtySegmentDisplayTestPkg is
+package body SegmentDisplayArtyTestPkg is
 
-end package body ArtySegmentDisplayTestPkg;
+end package body SegmentDisplayArtyTestPkg;
