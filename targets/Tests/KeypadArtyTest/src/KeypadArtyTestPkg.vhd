@@ -4,7 +4,7 @@
 --!
 --! @author 
 --!
---! @file ArtyKeypadTestPkg.vhd
+--! @file KeypadArtyTestPkg.vhd
 --!
 ---------------------------------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ use ieee.math_real.all;
 library surf;
 use surf.StdRtlPkg.all;
 
-package ArtyKeypadTestPkg is
+package KeypadArtyTestPkg is
 
    constant CLK_FREQ_C : real := 100.0E6;
 
@@ -29,8 +29,8 @@ package ArtyKeypadTestPkg is
    constant ROW2_C : natural := 2;
    constant ROW3_C : natural := 3;
 
-end ArtyKeypadTestPkg;
+end KeypadArtyTestPkg;
 
-package body ArtyKeypadTestPkg is
+package body KeypadArtyTestPkg is
 
-end package body ArtyKeypadTestPkg;
+end package body KeypadArtyTestPkg;
