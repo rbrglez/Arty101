@@ -16,6 +16,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 library surf;
 use surf.StdRtlPkg.all;
+use work.SegmentDisplayPkg.all;
 
 ---------------------------------------------------------------------------------------------------
 entity SegmentDisplay is
@@ -62,17 +63,17 @@ begin
 
       if (en_i = '1') then
          case data_i is
-            when x"0"   => v.segments := x"E7";
-            when x"1"   => v.segments := x"21";
-            when x"2"   => v.segments := x"CB";
-            when x"3"   => v.segments := x"6B";
-            when x"4"   => v.segments := x"2D";
-            when x"5"   => v.segments := x"6E";
-            when x"6"   => v.segments := x"EE";
-            when x"7"   => v.segments := x"23";
-            when x"8"   => v.segments := x"EF";
-            when x"9"   => v.segments := x"6F";
-            when others => v.segments := x"10";
+            when x"0"   => v.segments := SEG_DIS_ZERO_C;
+            when x"1"   => v.segments := SEG_DIS_ONE_C;
+            when x"2"   => v.segments := SEG_DIS_TWO_C;
+            when x"3"   => v.segments := SEG_DIS_THREE_C;
+            when x"4"   => v.segments := SEG_DIS_FOUR_C;
+            when x"5"   => v.segments := SEG_DIS_FIVE_C;
+            when x"6"   => v.segments := SEG_DIS_SIX_C;
+            when x"7"   => v.segments := SEG_DIS_SEVEN_C;
+            when x"8"   => v.segments := SEG_DIS_EIGHT_C;
+            when x"9"   => v.segments := SEG_DIS_NINE_C;
+            when others => v.segments := SEG_DIS_POINT_C;
          end case;
 
       else
