@@ -94,26 +94,17 @@ architecture rtl of ArtyKeypadTest is
    signal actKeysUpd : sl;
    signal actKeys    : slv(16 - 1 downto 0);
 
-   signal decRow0 : slv(4 - 1 downto 0);
-   signal decRow1 : slv(4 - 1 downto 0);
-   signal decRow2 : slv(4 - 1 downto 0);
-   signal decRow3 : slv(4 - 1 downto 0);
-
    -----------------------------------------------------------------------------
    -- Debug declarations
    -----------------------------------------------------------------------------
    attribute mark_debug               : string;
-   attribute mark_debug of clk        : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of fwCol      : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of hwCol      : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of fwRow      : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of hwRow      : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of actKeysUpd : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of actKeys    : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of decRow0    : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of decRow1    : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of decRow2    : signal is KEYPAD_DEBUG_C;
-   attribute mark_debug of decRow3    : signal is KEYPAD_DEBUG_C;
+   attribute mark_debug of clk        : signal is TOP_DEBUG_C;
+   attribute mark_debug of fwCol      : signal is TOP_DEBUG_C;
+   attribute mark_debug of hwCol      : signal is TOP_DEBUG_C;
+   attribute mark_debug of fwRow      : signal is TOP_DEBUG_C;
+   attribute mark_debug of hwRow      : signal is TOP_DEBUG_C;
+   attribute mark_debug of actKeysUpd : signal is TOP_DEBUG_C;
+   attribute mark_debug of actKeys    : signal is TOP_DEBUG_C;
 
 ---------------------------------------------------------------------------------------------------
 begin
@@ -121,7 +112,6 @@ begin
    -----------------------------------------------------------------------------
    -- Core
    -----------------------------------------------------------------------------
-
    fwLeds <= actKeys((0 + 1) * 4 - 1 downto 0 * 4);
 
    fwRgbLeds(3 * 0 + 0) <= actKeys(1 * 4 + 0);
