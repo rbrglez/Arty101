@@ -151,61 +151,27 @@ begin
          vcnt_o     => vcnt
       );
 
-   p_StupidProc : process (vgaClk) is
-   begin
+   u_VgaTestCtrl : entity work.VgaTestCtrl
+      generic map (
+         TPD_G                   => TPD_G,
+         VGA_HORIZONTAL_TIMING_G => VESA_640x480_AT_75HZ_C.horizontalTiming,
+         VGA_VERTICAL_TIMING_G   => VESA_640x480_AT_75HZ_C.verticalTiming
+      )
+      port map (
+         clk_i => vgaClk,
+         rst_i => rst,
+         en_i  => '1',
 
-      if (
-            to_integer(unsigned(hcnt)) < VESA_640x480_AT_75HZ_C.horizontalTiming.visibleArea and
-            to_integer(unsigned(vcnt)) < VESA_640x480_AT_75HZ_C.verticalTiming.visibleArea
-         ) then
-         -- visible area
-         if (
-               to_integer(unsigned(vcnt)) < BORDER_WIDTH_C or                                                     -- top border
-               to_integer(unsigned(vcnt)) > VESA_640x480_AT_75HZ_C.verticalTiming.visibleArea - BORDER_WIDTH_C or -- bottom border
-               to_integer(unsigned(hcnt)) > VESA_640x480_AT_75HZ_C.horizontalTiming.visibleArea - BORDER_WIDTH_C  -- right border
-            ) then
-            -- border
-            red   <= x"F" after TPD_G;
-            green <= x"D" after TPD_G;
-            blue  <= x"4" after TPD_G;
+         hvisible_i => hvisible,
+         vvisible_i => vvisible,
 
-         elsif (
-               to_integer(unsigned(hcnt)) > PADDLE_LEFT_C and   -- left paddle border
-               to_integer(unsigned(hcnt)) < PADDLE_RIGHT_C and  -- right paddle border
-               to_integer(unsigned(vcnt)) > PADDLE_V_POS_C and  -- top paddle border
-               to_integer(unsigned(vcnt)) < PADDLE_V_POS_C + 64 -- bottom paddle border
-            ) then
-            -- paddle
-            red   <= x"4" after TPD_G;
-            green <= x"D" after TPD_G;
-            blue  <= x"F" after TPD_G;
+         hcnt_i => hcnt,
+         vcnt_i => vcnt,
 
-         elsif (
-               to_integer(unsigned(hcnt)) > BALL_H_POS_C and     -- left paddle border
-               to_integer(unsigned(hcnt)) < BALL_H_POS_C + 8 and -- right paddle border
-               to_integer(unsigned(vcnt)) > BALL_V_POS_C and     -- top paddle border
-               to_integer(unsigned(vcnt)) < BALL_V_POS_C + 8     -- bottom paddle border
-            ) then
-            -- ball
-            red   <= x"D" after TPD_G;
-            green <= x"F" after TPD_G;
-            blue  <= x"4" after TPD_G;
-
-         else
-            -- background
-            red   <= x"F" after TPD_G;
-            green <= x"4" after TPD_G;
-            blue  <= x"D" after TPD_G;
-
-         end if;
-
-      else
-         red   <= (others => '0') after TPD_G;
-         green <= (others => '0') after TPD_G;
-         blue  <= (others => '0') after TPD_G;
-      end if;
-
-   end process p_StupidProc;
+         red_o   => red,
+         green_o => green,
+         blue_o  => blue
+      );
 
    -----------------------------------------------------------------------------
    -- IOs
