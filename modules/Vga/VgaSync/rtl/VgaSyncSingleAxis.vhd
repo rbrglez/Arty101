@@ -4,7 +4,7 @@
 --!
 --! @author 
 --!
---! @file VgaSyncFsm.vhd
+--! @file VgaSyncSingleAxis.vhd
 --!
 ---------------------------------------------------------------------------------------------------
 library ieee;
@@ -15,7 +15,7 @@ library surf;
 use surf.StdRtlPkg.all;
 use work.VgaPkg.all;
 
-entity VgaSyncFsm is
+entity VgaSyncSingleAxis is
    generic (
       TPD_G        : time := 1 ns;
       VGA_TIMING_G : VgaTimingType
@@ -31,9 +31,9 @@ entity VgaSyncFsm is
       visible_o : out sl;
       sync_o    : out sl
    );
-end VgaSyncFsm;
+end VgaSyncSingleAxis;
 ---------------------------------------------------------------------------------------------------
-architecture rtl of VgaSyncFsm is
+architecture rtl of VgaSyncSingleAxis is
    
    -- Local constants
    constant VISIBLE_C     : natural := VGA_TIMING_G.visibleArea;

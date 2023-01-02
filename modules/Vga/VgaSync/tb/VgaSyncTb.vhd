@@ -2,11 +2,11 @@
 -- Title       : <Title Block>
 -- Project     : Default Project Name
 --------------------------------------------------------------------------------
--- File        : VgaSyncCtrlTb.vhd
+-- File        : VgaSyncTb.vhd
 -- Author      : User Name <user.email@user.company.com>
 -- Company     : User Company Name
 -- Created     : Mon Jan  2 12:45:42 2023
--- Last update : Mon Jan  2 15:13:09 2023
+-- Last update : Mon Jan  2 15:30:00 2023
 -- Platform    : Default Part Number
 -- Standard    : <VHDL-2008 | VHDL-2002 | VHDL-1993 | VHDL-1987>
 --------------------------------------------------------------------------------
@@ -30,13 +30,13 @@ use work.VgaPkg.all;
 
 -----------------------------------------------------------
 
-entity VgaSyncCtrlTb is
+entity VgaSyncTb is
 
-end entity VgaSyncCtrlTb;
+end entity VgaSyncTb;
 
 -----------------------------------------------------------
 
-architecture testbench of VgaSyncCtrlTb is
+architecture testbench of VgaSyncTb is
 
    -- Constants
    constant VGA_SETTINGS_C : VgaSettingsType := VESA_640x480_AT_75HZ_C;
@@ -62,7 +62,7 @@ begin
    -----------------------------------------------------------
    -- Device Under Test
    -----------------------------------------------------------
-   dut_VgaSyncCtrl : entity work.VgaSyncCtrl
+   dut_VgaSync : entity work.VgaSync
       generic map (
          TPD_G                   => TPD_C,
          VGA_HORIZONTAL_TIMING_G => VGA_SETTINGS_C.horizontalTiming,

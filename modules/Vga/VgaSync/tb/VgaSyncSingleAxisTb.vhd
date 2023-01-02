@@ -2,11 +2,11 @@
 -- Title       : <Title Block>
 -- Project     : Default Project Name
 --------------------------------------------------------------------------------
--- File        : VgaSyncFsmTb.vhd
+-- File        : VgaSyncSingleAxisTb.vhd
 -- Author      : User Name <user.email@user.company.com>
 -- Company     : User Company Name
 -- Created     : Mon Jan  2 12:45:42 2023
--- Last update : Mon Jan  2 13:57:06 2023
+-- Last update : Mon Jan  2 15:29:38 2023
 -- Platform    : Default Part Number
 -- Standard    : <VHDL-2008 | VHDL-2002 | VHDL-1993 | VHDL-1987>
 --------------------------------------------------------------------------------
@@ -30,13 +30,13 @@ use work.VgaPkg.all;
 
 -----------------------------------------------------------
 
-entity VgaSyncFsmTb is
+entity VgaSyncSingleAxisTb is
 
-end entity VgaSyncFsmTb;
+end entity VgaSyncSingleAxisTb;
 
 -----------------------------------------------------------
 
-architecture testbench of VgaSyncFsmTb is
+architecture testbench of VgaSyncSingleAxisTb is
 
    -- Constants
    constant T_C   : time := real((1 / (VESA_640x480_AT_75HZ_C.generalTiming.pixelFreq))) * sec;
@@ -58,7 +58,7 @@ begin
    -----------------------------------------------------------
    -- Device Under Test
    -----------------------------------------------------------
-   dut_VgaSyncFsm : entity work.VgaSyncFsm
+   dut_VgaSyncSingleAxis : entity work.VgaSyncSingleAxis
       generic map (
          TPD_G        => TPD_C,
          VGA_TIMING_G => VESA_640x480_AT_75HZ_C.horizontalTiming

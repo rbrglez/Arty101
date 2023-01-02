@@ -4,7 +4,7 @@
 --!
 --! @author 
 --!
---! @file VgaSyncCtrl.vhd
+--! @file VgaSync.vhd
 --!
 ---------------------------------------------------------------------------------------------------
 library ieee;
@@ -17,7 +17,7 @@ use surf.StdRtlPkg.all;
 
 use work.VgaPkg.all;
 
-entity VgaSyncCtrl is
+entity VgaSync is
    generic (
       TPD_G                   : time := 1 ns;
       VGA_HORIZONTAL_TIMING_G : VgaTimingType;
@@ -36,16 +36,16 @@ entity VgaSyncCtrl is
       vvisible_o : out sl;
       vcnt_o     : out slv(32 - 1 downto 0)
    );
-end VgaSyncCtrl;
+end VgaSync;
 ---------------------------------------------------------------------------------------------------
-architecture rtl of VgaSyncCtrl is
+architecture rtl of VgaSync is
 
    signal hSyncEn : sl;
 
 ---------------------------------------------------------------------------------------------------
 begin
 
-   u_HorizontalSync : entity work.VgaSyncFsm
+   u_HorizontalSync : entity work.VgaSyncSingleAxis
       generic map (
          TPD_G        => TPD_G,
          VGA_TIMING_G => VGA_HORIZONTAL_TIMING_G
@@ -62,7 +62,7 @@ begin
          sync_o    => hsync_o
       );
 
-   u_VerticalSync : entity work.VgaSyncFsm
+   u_VerticalSync : entity work.VgaSyncSingleAxis
       generic map (
          TPD_G        => TPD_G,
          VGA_TIMING_G => VGA_VERTICAL_TIMING_G
