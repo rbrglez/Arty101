@@ -34,7 +34,8 @@ entity VgaSyncFsm is
 end VgaSyncFsm;
 ---------------------------------------------------------------------------------------------------
 architecture rtl of VgaSyncFsm is
-
+   
+   -- Local constants
    constant VISIBLE_C     : natural := VGA_TIMING_G.visibleArea;
    constant FRONT_PORCH_C : natural := VISIBLE_C + VGA_TIMING_G.frontPorch;
    constant SYNC_C        : natural := FRONT_PORCH_C + VGA_TIMING_G.syncPulse;

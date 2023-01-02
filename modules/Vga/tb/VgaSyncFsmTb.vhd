@@ -6,7 +6,7 @@
 -- Author      : User Name <user.email@user.company.com>
 -- Company     : User Company Name
 -- Created     : Mon Jan  2 12:45:42 2023
--- Last update : Mon Jan  2 13:35:17 2023
+-- Last update : Mon Jan  2 13:57:06 2023
 -- Platform    : Default Part Number
 -- Standard    : <VHDL-2008 | VHDL-2002 | VHDL-1993 | VHDL-1987>
 --------------------------------------------------------------------------------
@@ -39,7 +39,6 @@ end entity VgaSyncFsmTb;
 architecture testbench of VgaSyncFsmTb is
 
    -- Constants
-
    constant T_C   : time := real((1 / (VESA_640x480_AT_75HZ_C.generalTiming.pixelFreq))) * sec;
    constant TPD_C : time := 1 ns;
 
