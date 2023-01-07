@@ -14,8 +14,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 ----------------------------------------------------------------------------------------------------
 entity GeneralInputs is
@@ -45,7 +44,7 @@ architecture rtl of GeneralInputs is
 begin
 
    -- synchronize inputs
-   u_InputsSync : entity surf.SynchronizerVector
+   u_InputsSync : entity work.SynchronizerVector
       generic map (
          TPD_G    => TPD_G,
          STAGES_G => SYNC_STAGES_G,
@@ -60,7 +59,7 @@ begin
 
    -- debounce inputs
    GEN_DEBOUNCE : for I in INPUT_WIDTH_G - 1 downto 0 generate
-      ux_Debouncer : entity surf.Debouncer
+      ux_Debouncer : entity work.Debouncer
          generic map (
             TPD_G             => TPD_G,
             CLK_FREQ_G        => CLK_FREQ_G,

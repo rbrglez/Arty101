@@ -16,8 +16,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use std.textio.all;
 use ieee.std_logic_textio.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 -----------------------------------------------------------
 entity GeneralInputsTb is

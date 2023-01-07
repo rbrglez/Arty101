@@ -14,8 +14,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 ----------------------------------------------------------------------------------------------------
 entity GeneralOutputs is
@@ -40,7 +39,7 @@ architecture rtl of GeneralOutputs is
 begin
 
    -- synchronize outputs
-   u_OutputsSync : entity surf.SynchronizerVector
+   u_OutputsSync : entity work.SynchronizerVector
       generic map (
          TPD_G          => TPD_G,
          WIDTH_G        => OUTPUT_WIDTH_G,

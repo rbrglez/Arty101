@@ -14,8 +14,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 ----------------------------------------------------------------------------------------------------
 entity ArtyPeripheralIo is
