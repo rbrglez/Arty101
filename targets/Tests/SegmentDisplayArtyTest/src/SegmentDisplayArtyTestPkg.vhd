@@ -15,12 +15,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 package SegmentDisplayArtyTestPkg is
-
-   constant CLK_FREQ_C : real := 100.0E6;
 
 end SegmentDisplayArtyTestPkg;
 

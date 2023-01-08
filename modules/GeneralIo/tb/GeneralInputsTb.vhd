@@ -16,8 +16,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use std.textio.all;
 use ieee.std_logic_textio.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 -----------------------------------------------------------
 entity GeneralInputsTb is
@@ -30,20 +29,34 @@ architecture testbench of GeneralInputsTb is
    constant TPD_C : time := 1 ns;
    constant T_C   : time := 10 ns; -- NS
 
-   constant INPUT_WIDTH_C     : natural := 4;
-   constant CLK_FREQ_C        : real    := 100.0E6;
-   constant SYNC_STAGES_C     : natural := 3;
-   constant DEBOUNCE_PERIOD_C : real    := 1.0E-6;
-   constant HW_POLARITY_C     : sl      := '1';
-   constant FW_POLARITY_C     : sl      := '1';
+   constant WIDTH_C    : natural := 4;
+   constant STAGES_C   : natural := 3;
+   constant DEBOUNCE_C : natural := 100;
 
    -- dut ports
    signal clk_i      : sl;
    signal rst_i      : sl;
-   signal hwInputs_i : slv(INPUT_WIDTH_C - 1 downto 0);
-   signal fwInputs_o : slv(INPUT_WIDTH_C - 1 downto 0);
+   signal hwInputs_i : slv(WIDTH_C - 1 downto 0);
+   signal fwInputs_o : slv(WIDTH_C - 1 downto 0);
 
 begin
+   -----------------------------------------------------------
+   -- Device Under Test
+   -----------------------------------------------------------
+   dut_GeneralInputs : entity work.GeneralInputs
+      generic map (
+         TPD_G         => TPD_C,
+         WIDTH_G       => WIDTH_C,
+         STAGES_G      => STAGES_C,
+         DEBOUNCE_CC_G => DEBOUNCE_CC_C
+      )
+      port map (
+         clk_i      => clk_i,
+         rst_i      => rst_i,
+         hwInputs_i => hwInputs_i,
+         fwInputs_o => fwInputs_o
+      );
+
    -----------------------------------------------------------
    -- Clocks and Reset
    -----------------------------------------------------------
@@ -84,24 +97,5 @@ begin
       assert false report "Simulation completed" severity failure;
 
    end process p_Sim;
-   -----------------------------------------------------------
-   -- Entity Under Test
-   -----------------------------------------------------------
-   dut_GeneralInputs : entity work.GeneralInputs
-      generic map (
-         TPD_G             => TPD_C,
-         INPUT_WIDTH_G     => INPUT_WIDTH_C,
-         CLK_FREQ_G        => CLK_FREQ_C,
-         SYNC_STAGES_G     => SYNC_STAGES_C,
-         DEBOUNCE_PERIOD_G => DEBOUNCE_PERIOD_C,
-         HW_POLARITY_G     => HW_POLARITY_C,
-         FW_POLARITY_G     => FW_POLARITY_C
-      )
-      port map (
-         clk_i      => clk_i,
-         rst_i      => rst_i,
-         hwInputs_i => hwInputs_i,
-         fwInputs_o => fwInputs_o
-      );
 
 end architecture testbench;

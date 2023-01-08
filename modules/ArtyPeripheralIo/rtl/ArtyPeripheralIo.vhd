@@ -14,15 +14,13 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 ----------------------------------------------------------------------------------------------------
 entity ArtyPeripheralIo is
    generic (
-      TPD_G             : time := 1 ns;
-      CLK_FREQ_G        : real := 100.0E6;
-      DEBOUNCE_PERIOD_G : real := 20.0E-3
+      TPD_G         : time    := 1 ns;
+      DEBOUNCE_CC_G : natural := 20_000_000
    );
    port (
       --------------------------------------------------------------------------
@@ -55,8 +53,9 @@ end ArtyPeripheralIo;
 ----------------------------------------------------------------------------------------------------   
 architecture rtl of ArtyPeripheralIo is
 
-   signal clk : sl;
-   signal rst : sl;
+   signal clk  : sl;
+   signal rstn : sl;
+   signal rst  : sl;
 
 ---------------------------------------------------------------------------------------------------
 begin
@@ -70,33 +69,28 @@ begin
 
    -- Reset
    fwRst_o <= rst;
+   rst     <= not(rstn);
    u_RstInput : entity work.GeneralInputs
       generic map (
-         TPD_G             => TPD_G,
-         INPUT_WIDTH_G     => 1,
-         CLK_FREQ_G        => CLK_FREQ_G,
-         SYNC_STAGES_G     => 3,
-         DEBOUNCE_PERIOD_G => DEBOUNCE_PERIOD_G,
-         HW_POLARITY_G     => '0',
-         FW_POLARITY_G     => '1'
+         TPD_G         => TPD_G,
+         WIDTH_G       => 1,
+         STAGES_G      => 3,
+         DEBOUNCE_CC_G => DEBOUNCE_CC_G
       )
       port map (
          clk_i         => clk,
          rst_i         => '0',
          hwInputs_i(0) => hwRst_i,
-         fwInputs_o(0) => rst
+         fwInputs_o(0) => rstn
       );
 
    -- Buttons
    u_ButtonInputs : entity work.GeneralInputs
       generic map (
-         TPD_G             => TPD_G,
-         INPUT_WIDTH_G     => 4,
-         CLK_FREQ_G        => CLK_FREQ_G,
-         SYNC_STAGES_G     => 3,
-         DEBOUNCE_PERIOD_G => DEBOUNCE_PERIOD_G,
-         HW_POLARITY_G     => '1',
-         FW_POLARITY_G     => '1'
+         TPD_G         => TPD_G,
+         WIDTH_G       => 4,
+         STAGES_G      => 3,
+         DEBOUNCE_CC_G => DEBOUNCE_CC_G
       )
       port map (
          clk_i      => clk,
@@ -108,13 +102,10 @@ begin
    -- Switches
    u_SwitchInputs : entity work.GeneralInputs
       generic map (
-         TPD_G             => TPD_G,
-         INPUT_WIDTH_G     => 4,
-         CLK_FREQ_G        => CLK_FREQ_G,
-         SYNC_STAGES_G     => 3,
-         DEBOUNCE_PERIOD_G => DEBOUNCE_PERIOD_G,
-         HW_POLARITY_G     => '1',
-         FW_POLARITY_G     => '1'
+         TPD_G         => TPD_G,
+         WIDTH_G       => 4,
+         STAGES_G      => 3,
+         DEBOUNCE_CC_G => DEBOUNCE_CC_G
       )
       port map (
          clk_i      => clk,
@@ -129,10 +120,9 @@ begin
    -- Leds
    u_LedOutputs : entity work.GeneralOutputs
       generic map (
-         TPD_G          => TPD_G,
-         OUTPUT_WIDTH_G => 4,
-         SYNC_STAGES_G  => 2,
-         HW_POLARITY_G  => '1'
+         TPD_G    => TPD_G,
+         WIDTH_G  => 4,
+         STAGES_G => 2
       )
       port map (
          clk_i       => clk,
@@ -144,10 +134,9 @@ begin
    -- Rgb Leds
    u_RgbLedOutputs : entity work.GeneralOutputs
       generic map (
-         TPD_G          => TPD_G,
-         OUTPUT_WIDTH_G => 12,
-         SYNC_STAGES_G  => 2,
-         HW_POLARITY_G  => '1'
+         TPD_G    => TPD_G,
+         WIDTH_G  => 12,
+         STAGES_G => 2
       )
       port map (
          clk_i       => clk,

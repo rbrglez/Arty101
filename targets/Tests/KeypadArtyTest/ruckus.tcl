@@ -7,7 +7,7 @@ loadRuckusTcl $::env(TOP_DIR)/submodules/
 
 # Load target's source code and constraints
 loadSource      -dir  "$::DIR_PATH/src/"
-loadConstraints  -dir  "$::DIR_PATH/src/"
+loadConstraints -dir  "$::DIR_PATH/src/"
 
 # Load modules
 loadRuckusTcl "$::env(TOP_DIR)/modules/GeneralIo"

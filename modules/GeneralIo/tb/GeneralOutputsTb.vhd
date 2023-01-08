@@ -16,8 +16,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use std.textio.all;
 use ieee.std_logic_textio.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 -----------------------------------------------------------
 entity GeneralOutputsTb is
@@ -30,17 +29,32 @@ architecture testbench of GeneralOutputsTb is
    constant TPD_C : time := 1 ns;
    constant T_C   : time := 10 ns;
 
-   constant OUTPUT_WIDTH_C : natural := 4;
-   constant SYNC_STAGES_C  : natural := 2;
-   constant HW_POLARITY_C  : sl      := '1';
+   constant WIDTH_C  : natural := 4;
+   constant STAGES_C : natural := 2;
 
    -- Testbench DUT ports
    signal clk_i       : sl;
    signal rst_i       : sl;
-   signal fwOutputs_i : slv(OUTPUT_WIDTH_C - 1 downto 0);
-   signal hwOutputs_o : slv(OUTPUT_WIDTH_C - 1 downto 0);
+   signal fwOutputs_i : slv(WIDTH_C - 1 downto 0);
+   signal hwOutputs_o : slv(WIDTH_C - 1 downto 0);
 
 begin
+   -----------------------------------------------------------
+   -- Device Under Test
+   -----------------------------------------------------------
+   dut_GeneralOutputs : entity work.GeneralOutputs
+      generic map (
+         TPD_G    => TPD_C,
+         WIDTH_G  => WIDTH_C,
+         STAGES_G => STAGES_C
+      )
+      port map (
+         clk_i       => clk_i,
+         rst_i       => rst_i,
+         fwOutputs_i => fwOutputs_i,
+         hwOutputs_o => hwOutputs_o
+      );
+
    -----------------------------------------------------------
    -- Clocks and Reset
    -----------------------------------------------------------
@@ -81,21 +95,5 @@ begin
       assert false report "Simulation completed" severity failure;
 
    end process p_Sim;
-   -----------------------------------------------------------
-   -- Entity Under Test
-   -----------------------------------------------------------
-   dut_GeneralOutputs : entity work.GeneralOutputs
-      generic map (
-         TPD_G          => TPD_C,
-         OUTPUT_WIDTH_G => OUTPUT_WIDTH_C,
-         SYNC_STAGES_G  => SYNC_STAGES_C,
-         HW_POLARITY_G  => HW_POLARITY_C
-      )
-      port map (
-         clk_i       => clk_i,
-         rst_i       => rst_i,
-         fwOutputs_i => fwOutputs_i,
-         hwOutputs_o => hwOutputs_o
-      );
 
 end architecture testbench;

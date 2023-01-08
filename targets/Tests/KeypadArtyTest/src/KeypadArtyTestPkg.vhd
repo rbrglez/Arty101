@@ -12,12 +12,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 
 package KeypadArtyTestPkg is
-
-   constant CLK_FREQ_C : real := 100.0E6;
 
    constant COL0_C : natural := 0;
    constant COL1_C : natural := 1;

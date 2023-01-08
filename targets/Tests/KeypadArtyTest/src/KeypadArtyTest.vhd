@@ -14,8 +14,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-library surf;
-use surf.StdRtlPkg.all;
+use work.StdRtlPkg.all;
 use work.KeypadArtyTestPkg.all;
 use work.MarkDebugPkg.all;
 
@@ -155,9 +154,8 @@ begin
    -- Peripheral Io
    u_ArtyPeripheralIo : entity work.ArtyPeripheralIo
       generic map (
-         TPD_G             => TPD_G,
-         CLK_FREQ_G        => CLK_FREQ_C,
-         DEBOUNCE_PERIOD_G => 20.0E-3
+         TPD_G         => TPD_G,
+         DEBOUNCE_CC_G => 20_000_000
       )
       port map (
          hwClk_i => CLK100MHZ,
@@ -198,13 +196,10 @@ begin
    -- Keypad Column inputs
    u_ColInputs : entity work.GeneralInputs
       generic map (
-         TPD_G             => TPD_G,
-         INPUT_WIDTH_G     => 4,
-         CLK_FREQ_G        => CLK_FREQ_C,
-         SYNC_STAGES_G     => 3,
-         DEBOUNCE_PERIOD_G => 1.0E-3,
-         HW_POLARITY_G     => '1',
-         FW_POLARITY_G     => '1'
+         TPD_G         => TPD_G,
+         WIDTH_G       => 4,
+         STAGES_G      => 3,
+         DEBOUNCE_CC_G => 1_000_000
       )
       port map (
          clk_i      => clk,
@@ -221,10 +216,9 @@ begin
    -- Keypad Row outputs
    u_RowOutputs : entity work.GeneralOutputs
       generic map (
-         TPD_G          => TPD_G,
-         OUTPUT_WIDTH_G => 4,
-         SYNC_STAGES_G  => 2,
-         HW_POLARITY_G  => '1'
+         TPD_G    => TPD_G,
+         WIDTH_G  => 4,
+         STAGES_G => 2
       )
       port map (
          clk_i       => clk,
