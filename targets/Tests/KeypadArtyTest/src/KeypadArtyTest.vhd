@@ -199,7 +199,7 @@ begin
          TPD_G         => TPD_G,
          WIDTH_G       => 4,
          STAGES_G      => 3,
-         DEBOUNCE_CC_G => 1_000_000
+         DEBOUNCE_CC_G => 100_000
       )
       port map (
          clk_i      => clk,
