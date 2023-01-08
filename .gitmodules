@@ -4,3 +4,6 @@
 [submodule "submodules/surf"]
 	path = submodules/surf
 	url = git@github.com:rbrglez/surf.git
+[submodule "submodules/vhdlLib"]
+	path = submodules/vhdlLib
+	url = git@github.com:rbrglez/vhdlLib.git
